@@ -155,16 +155,16 @@ register_migraphx_gpu_ops(miopen_
     pooling
     quant_convolution
 )
-register_op(migraphx_gpu 
-    HEADER migraphx/gpu/rnn_variable_seq_lens.hpp 
+register_op(migraphx_gpu
+    HEADER migraphx/gpu/rnn_variable_seq_lens.hpp
     OPERATORS gpu::hip_rnn_var_sl_shift_sequence gpu::hip_rnn_var_sl_shift_output gpu::hip_rnn_var_sl_last_output
     INCLUDES migraphx/gpu/context.hpp)
-register_op(migraphx_gpu 
-    HEADER migraphx/gpu/int8_gemm_pack.hpp 
+register_op(migraphx_gpu
+    HEADER migraphx/gpu/int8_gemm_pack.hpp
     OPERATORS gpu::hip_int8_gemm_pack_a gpu::hip_int8_gemm_pack_b
     INCLUDES migraphx/gpu/context.hpp)
-register_op(migraphx_gpu 
-    HEADER migraphx/gpu/gemm.hpp 
+register_op(migraphx_gpu
+    HEADER migraphx/gpu/gemm.hpp
     OPERATORS gpu::rocblas_gemm<op::dot> gpu::rocblas_gemm<op::quant_dot>
     INCLUDES migraphx/gpu/context.hpp)
 rocm_set_soversion(migraphx_gpu ${MIGRAPHX_SO_VERSION})
@@ -218,9 +218,9 @@ foreach(_unused RANGE 2)
 endforeach()
 
 message(STATUS "Hip compiler flags: ${HIP_COMPILER_FLAGS}")
-target_compile_definitions(migraphx_gpu PRIVATE 
-    "-DMIGRAPHX_HIP_COMPILER=${CMAKE_CXX_COMPILER}" 
-    "-DMIGRAPHX_HIP_COMPILER_FLAGS=${HIP_COMPILER_FLAGS}" 
+target_compile_definitions(migraphx_gpu PRIVATE
+    "-DMIGRAPHX_HIP_COMPILER=${CMAKE_CXX_COMPILER}"
+    "-DMIGRAPHX_HIP_COMPILER_FLAGS=${HIP_COMPILER_FLAGS}"
     "-DMIGRAPHX_OFFLOADBUNDLER_BIN=${MIGRAPHX_OFFLOADBUNDLER_BIN}"
     "-DMIGRAPHX_EXTRACT_KERNEL=${MIGRAPHX_EXTRACT_KERNEL}"
     "-DMIGRAPHX_USE_HIPRTC=0"
@@ -239,12 +239,7 @@ get_target_property(MIOPEN_LOCATION MIOpen LOCATION)
 check_library_exists(MIOpen "miopenHiddenSetConvolutionFindMode" "${MIOPEN_LOCATION}" HAS_FIND_MODE_API)
 check_library_exists(MIOpen "miopenFindSolutions" "${MIOPEN_LOCATION}" HAS_FIND_2_API)
 
-if(HAS_FIND_2_API) 
-    target_compile_definitions(migraphx_gpu PUBLIC -DMIGRAPHX_HAS_FIND_2_API)
-    message(STATUS "MIGraphx is using Find-2.0 API of MIOpen")
-else()
-    message(STATUS "MIOpen does not have Find-2.0 API")
-endif()
+message(STATUS "MIOpen does not have Find-2.0 API")
 
 if(HAS_FIND_MODE_API)
     target_compile_definitions(migraphx_gpu PUBLIC -DMIGRAPHX_HAS_FIND_MODE_API)
@@ -265,4 +260,3 @@ rocm_install_targets(
   INCLUDE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
-
